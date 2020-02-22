@@ -185,6 +185,11 @@
   </div>
   {{ /each }}
 </script>
+<!-- 空提示 -->
+<script id="empty" type="text/html">
+  <img src="./img/empty.png" alt="空列表">
+  <p>查无此人，请换个关键词再搜索</p>
+</script>
 <script>
   /*
     角色查询数据 - 带分页
@@ -265,12 +270,22 @@
         dataType: "json",
         success: function (response) {
           console.log(response);
-          // 设置页码文本：当前页码 / 总页数
-          $('.page-num a').text(`${pageNum} / ${ response.totalPage }`);
-          // 调用模板引擎并渲染列表
-          const htmlStr = template('hero', response);
-          // 渲染列表
-          $('.row').html(htmlStr);
+          // 情况1: 有列表数据，渲染列表
+          if(response.totalPage){
+            // 设置页码文本：当前页码 / 总页数
+            $('.page-num a').text(`${pageNum} / ${ response.totalPage }`);
+            // 调用模板引擎并渲染列表
+            const htmlStr = template('hero', response);
+            // 渲染列表
+            $('.row').html(htmlStr);
+          }
+          // 情况2：列表为空，提示
+          else{
+            // 分页就显示默认的 1/1
+            $('.page-num a').text(`1 / 1`);
+            const htmlStr = template('empty', {});
+            $('.row').html(htmlStr);
+          }
         }
       });
     });
