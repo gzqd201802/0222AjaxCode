@@ -114,6 +114,27 @@
 </script>
 <script src="./js/jquery-1.12.4.min.js"></script>
 <script src="./js/template-web.js"></script>
+<!-- 准备模板 -->
+<script id="hero" type="text/html">
+  {{ each heros }}
+  <tr>
+    <td>
+      <img class="icon" src="{{ $value.heroIcon }}" alt="" />
+      <span>
+        {{ $value.heroName }}
+      </span>
+    </td>
+    <td>
+      <img class="skill" src="{{ $value.skillIcon  }}" alt="" />
+      {{ $value.skillName }}
+    </td>
+    <td>
+      <img class="weapon" src="{{ $value.weaponIcon  }}" alt="" />
+      {{ $value.weaponName }}
+    </td>
+  </tr>  
+  {{ /each }}
+</script>
 <script>
   $(function () {
 
@@ -180,11 +201,20 @@
         },
         dataType: "json",
         success: function (response) {
-          console.log(response);
+          // console.log(response);
+          // 模板步骤4：调用模板
+          const htmlStr = template('hero', response.data);
+          // 模板步骤5：把模板渲染到页面
+          $('tbody').html(htmlStr);
         }
       });
     });
 
+    // 4. 默认点中第一个 调用第一个的点击事件
+    // 知识点：
+    //  .eq(0)     选中第一个元素(索引值为0)
+    //  .click()   触发点击事件
+    $('.nav ul li').eq(0).click();
 
   })
 
