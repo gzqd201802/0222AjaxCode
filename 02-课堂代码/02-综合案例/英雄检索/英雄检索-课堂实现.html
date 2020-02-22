@@ -210,11 +210,59 @@
       });
     });
 
-    // 4. 默认点中第一个 调用第一个的点击事件
+    // 功能2.4. 默认点中第一个 调用第一个的点击事件
     // 知识点：
     //  .eq(0)     选中第一个元素(索引值为0)
     //  .click()   触发点击事件
     $('.nav ul li').eq(0).click();
+
+    // 点击头像看酷炫效果
+    // - 请求地址：https://autumnfish.cn/api/cq/gif
+    // - 请求方法：get
+    // - 请求参数：name
+    // 步骤
+    
+
+    // 1. 点击英雄头像
+    // 因为列表是动态生成的，需要通过事件委托绑定时间
+    $('.cq-list').on('click','.icon',function(){
+      // 2. 弹出遮罩层  有loading动画
+      $('.cover').show();
+      // 3. 获取该英雄对应的gif图 - ajax 获取的
+      $.ajax({
+        type: "get",
+        url: "https://autumnfish.cn/api/cq/gif",
+        data: {
+          // 英雄名字，是通过查找后一个兄弟的文本内容实现的
+          // $(this)   当前英雄图标，而英雄名在图片的后面
+          // .next()   后一个兄弟
+          // .text()   获取文本
+          name: $(this).next().text().trim()
+        },
+        dataType: "json",
+        // 在每次发送前，都先把图片换回 loading 图
+        beforeSend:function(){
+          $('.cover .loading').attr({
+            src : './img/loading01.gif'
+          });
+        },
+        success: function (response) {
+          // 4. 获取到之后，设置到遮罩层中的img的src上即可
+          $('.cover .loading').attr({
+            src : response.data.skillGif
+          })
+        }
+      });
+    });
+
+    // 5. 单击关闭遮罩层
+    $('.cover').click(function(e){
+      // 点击的遮罩盒子我们才隐藏内容
+      if(e.target.className === 'cover'){
+        $(this).hide();
+      }
+    });
+
 
   })
 
