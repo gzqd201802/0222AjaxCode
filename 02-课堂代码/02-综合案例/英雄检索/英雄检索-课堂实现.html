@@ -240,13 +240,16 @@
           name: $(this).next().text().trim()
         },
         dataType: "json",
-        // 在每次发送前，都先把图片换回 loading 图
+        // bug：第二次查看英雄技能的时候，loading 图没有了
+        // 修复：在每次发送前，都先把图片换回 loading 图
         beforeSend:function(){
           $('.cover .loading').attr({
             src : './img/loading01.gif'
           });
         },
         success: function (response) {
+          // 一定要打印出来数据查看 图片 到底是可以通过那个属性名访问
+          console.log(response);
           // 4. 获取到之后，设置到遮罩层中的img的src上即可
           $('.cover .loading').attr({
             src : response.data.skillGif
@@ -256,9 +259,12 @@
     });
 
     // 5. 单击关闭遮罩层
-    $('.cover').click(function(e){
-      // 点击的遮罩盒子我们才隐藏内容
-      if(e.target.className === 'cover'){
+    //  需求：点击遮罩盒子才隐藏(点击图片不隐藏)
+    //  bug：点击图片的时候相当于也点了 cover 父盒子，所以父盒子的事件会触发
+    $('.cover').click(function(event){
+      console.log(event.target.className);
+      // event.target的类名为 cover 的时候才隐藏
+      if(event.target.className === 'cover'){
         $(this).hide();
       }
     });
