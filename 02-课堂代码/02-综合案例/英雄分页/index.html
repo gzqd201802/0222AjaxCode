@@ -218,12 +218,6 @@
       3. 如果大于总页数 提示
       4. 重新调用接口（调用抽取的方法即可）
 
-
-      准备loading的元素
-
-      1. 宽高100%的div 不能影响其他元素  脱标
-      2. 中间有一个loading的图片.gif
-      3. 若隐若现的效果 opacity
   */
 </script>
 <script>
@@ -245,10 +239,12 @@
     //   2. 页码
 
     // 为了方便以后修改，设置为变量。
+    // 以下几个变量需要在不同的函数内访问，所以在外面统一定义。
+    // 以下变量在函数内只是重新赋值或使用而已，并没有通过 let 新创建
     let pageNum = 1;      // 页码
     let pageSize = 8;     // 页容量
     let query = '';       // 搜索关键词
-    let totalPage = 1;
+    let totalPage = 1;    // 默认总页数1
 
     function render() {
       $.ajax({
@@ -289,7 +285,9 @@
       // 阻止表单默认提交
       e.preventDefault();
       // 点击搜索的时候获取输入的值
-      query = $('.input-search').val().trim()
+      query = $('.input-search').val().trim();
+      // 重新变回第一页
+      pageNum = 1;
       // 通过 ajax 请求数据，渲染数据
       render();
     });
