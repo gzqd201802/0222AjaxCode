@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul class="list">
+        
+    </ul>
+    <!-- 1. 导入模板引擎 -->
+    <script src="./lib/template-web.js"></script>
+    <script src="./lib/jquery-1.12.4.min.js"></script>
+    <!-- 2. 准备模板 -->
+    <script id="heros" type="text/html">
+        {{ each list }}
+        <li>
+            <p><img src="{{ $value.icon }}" alt=""></p>
+            <p>英雄名字：{{ $value.name }}</p>
+            <p>英雄技能：{{ $value.skill }}</p>
+        </li>
+        {{ /each }}
+    </script>
+    <script>
+        // 3. 准备数据 - ajax 动态获取
+        $(function(){
+
+            // 角色查询带分页
+            // 查询英雄的 详细信息
+            // 请求地址：https://autumnfish.cn/api/cq/page
+            // 请求方法：get
+            // 请求参数：query,pageNum,pageSize
+            // 参数名	参数说明	备注
+            // query	英雄名	可以为空，为空表示不搜索
+            // pageNum	页码	必填，数值
+            // pageSize	页容量	必填，每页多少条数据，数值
+
+            // $.ajax 参数 
+            $.ajax({
+                // 请求方式
+                type:'get',
+                // 请求地址
+                url:'https://autumnfish.cn/api/cq/page',
+                // 请求参数
+                data: {
+                    query:'剑',
+                    pageNum: 2,
+                    pageSize: 10
+                },
+                // 返回类型
+                dataType: 'json',
+                // 回调函数 - 请求成功
+                success:function(res){
+                    // console.log(res);
+                    // 4. 调用模板
+                    const htmlStr = template('heros', res);
+                    // 5. 渲染 - 把模板生成的html字符串写入到页面中
+                    $('.list').html(htmlStr);
+                }
+            })
+
+        })
+
+    </script>
+</body>
+</html>
