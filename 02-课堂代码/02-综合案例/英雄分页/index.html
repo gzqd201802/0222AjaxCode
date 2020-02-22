@@ -241,9 +241,9 @@
     // 为了方便以后修改，设置为变量。
     // 以下几个变量需要在不同的函数内访问，所以在外面统一定义。
     // 以下变量在函数内只是重新赋值或使用而已，并没有通过 let 新创建
+    let query = '';       // 搜索关键词
     let pageNum = 1;      // 页码
     let pageSize = 8;     // 页容量
-    let query = '';       // 搜索关键词
     let totalPage = 1;    // 默认总页数1
 
     function render() {
@@ -261,8 +261,8 @@
           console.log(response);
           // 情况1: 有列表数据，渲染列表
           if (response.totalPage) {
-            // ! 把局部的变量保存到公共的变量中，用于下一页临界点判断
-            totalPage = response.totalPage
+            // !!! 把局部的变量保存到公共的变量中，用于下一页临界点判断
+            totalPage = response.totalPage;
             // 设置页码文本：当前页码 / 总页数
             $('.page-num a').text(`${pageNum} / ${response.totalPage}`);
             // 调用模板引擎并渲染列表
