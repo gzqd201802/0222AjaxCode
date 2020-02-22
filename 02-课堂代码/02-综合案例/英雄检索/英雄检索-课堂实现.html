@@ -76,7 +76,7 @@
     2. 数据获取到之后设置给body的背景图即可
     3. 使用定时器间隔获取即可
 
-    点击高亮tab
+    功能2：点击高亮tab
       步骤
 
       1. 绑定点击事件，那一排tab
@@ -150,6 +150,40 @@
     // setInterval(匿名函数/函数名,时间间隔);
     // 通过定时器每隔 60s 换一次背景图
     let timerId = setInterval(randomBg, 60000);
+
+    // 功能2：点击高亮tab
+    // 1. 绑定点击事件，那一排tab
+    $('.nav ul li').click(function(){
+      // 2. 为点击的添加 active  类
+      // 3. 移除他兄弟的 active 类
+      $(this).addClass('active').siblings().removeClass('active');
+      // jQuery 方法：
+      // $(this)                当前元素
+      // .addClass('active')    添加类
+      // .siblings()            选择到兄弟(不包括)
+      // .removeClass('active') 移除类名
+
+
+      // 4. 底部内容跟随tab切换
+      // - 请求地址：https://autumnfish.cn/api/cq/category
+      // - 请求方法：get
+      // - 请求参数：type，剑士，骑士，弓手，猎人，法师，祭司
+      $.ajax({
+        type: "get",
+        url: "https://autumnfish.cn/api/cq/category",
+        data: {
+          // 注意点：type 的值就是当前点击 li 的文本内容
+          //  $(this)     当前点击的 li
+          //   .text()    仅仅获取文本内容
+          //   .trim()    去除多余首尾空格
+          type: $(this).text().trim()
+        },
+        dataType: "json",
+        success: function (response) {
+          console.log(response);
+        }
+      });
+    });
 
 
   })
