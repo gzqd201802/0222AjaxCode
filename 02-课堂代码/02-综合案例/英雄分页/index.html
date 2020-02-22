@@ -245,9 +245,10 @@
     //   2. 页码
 
     // 为了方便以后修改，设置为变量。
-    let pageNum = 2;      // 页码
+    let pageNum = 1;      // 页码
     let pageSize = 8;     // 页容量
     let query = '';       // 搜索关键词
+    let totalPage = 1;
 
     function render() {
       $.ajax({
@@ -264,6 +265,8 @@
           console.log(response);
           // 情况1: 有列表数据，渲染列表
           if (response.totalPage) {
+            // ! 把局部的变量保存到公共的变量中，用于下一页临界点判断
+            totalPage = response.totalPage
             // 设置页码文本：当前页码 / 总页数
             $('.page-num a').text(`${pageNum} / ${response.totalPage}`);
             // 调用模板引擎并渲染列表
@@ -305,6 +308,9 @@
       }else {
         // 页码减少
         pageNum--;
+        // 触发点击搜索的业务 - bug：当输入框的值发生改变的时候，查询的数据变化了
+        // $('.btn-search').click();
+        // 修复 bug：把 ajax请求和渲染部分逻辑抽离封装
         // 再次调用请求数据和渲染的功能
         render();
       }
@@ -315,6 +321,18 @@
     //   2. 页码++
     //   3. 如果大于总页数 提示
     //   4. 重新调用接口（调用抽取的方法即可）
+    $('[aria-label="Next"]').click(function(){
+      // 如果当前页数等于总页数，说明已经没有更多数据了
+      if( pageNum ===  totalPage){
+        alert('没有更多了');
+      }else{
+        // 页码增加
+        pageNum++;
+        // 重新请求和渲染
+        render();
+      }
+    });
+
 
   });
 
